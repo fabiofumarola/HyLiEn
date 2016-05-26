@@ -1,5 +1,4 @@
 package eu.unicredit.web
-
 import scala.collection.mutable
 
 /**
@@ -9,22 +8,22 @@ object Models {
 
   case class Location(x: Int, y: Int)
 
+  val noLocation = Location(-1, -1)
+
   case class Size(width: Int, height: Int)
 
-  case class VisualDomNode(
-    id: Int,
-    tagName: String,
-    cssClasses: String,
-    location: Location,
-    size: Size,
-    text: String,
-    children: mutable.Buffer[VisualDomNode] = mutable.Buffer.empty[VisualDomNode])
+  val noSize = Size(-1, -1)
+
+  val noCssSelector = ""
 
   case class DomNode(
+    parent: Option[DomNode],
     id: Int,
     tagName: String,
     cssClasses: String,
     cssSelector: String,
+    location: Location,
+    size: Size,
     text: String,
     children: mutable.Buffer[DomNode] = mutable.Buffer.empty[DomNode])
 
