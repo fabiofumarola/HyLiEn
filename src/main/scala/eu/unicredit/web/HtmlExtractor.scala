@@ -2,11 +2,11 @@ package eu.unicredit.web
 
 import java.net.URL
 
-import com.machinepublishers.jbrowserdriver.{ JBrowserDriver, Settings, Timezone }
+import com.machinepublishers.jbrowserdriver.{JBrowserDriver, Settings, Timezone}
 import eu.unicredit.web.Models._
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
-import org.openqa.selenium.{ By, WebElement }
+import org.openqa.selenium.{By, Dimension, WebElement}
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable
@@ -16,13 +16,14 @@ trait WebExtractor {
 }
 
 /**
- * Created by fabiofumarola on 24/05/16.
- */
-class VisualWebExtractor(headless: Boolean = true, quickRender: Boolean = true) extends WebExtractor {
+  * Created by fabiofumarola on 24/05/16.
+  */
+class VisualTagTreeBuilder(headless: Boolean = true, quickRender: Boolean = true) extends WebExtractor {
 
   private val settings = Settings.builder()
     .timezone(Timezone.EUROPE_ROME)
     .headless(headless)
+    .screen(new Dimension(1920, 1080))
     .cache(true)
     .quickRender(quickRender)
     .ajaxWait(300)
@@ -31,10 +32,10 @@ class VisualWebExtractor(headless: Boolean = true, quickRender: Boolean = true) 
   private val driver = new JBrowserDriver(settings)
 
   /**
-   *
-   * @param url
-   * @return the root of the parsed tree
-   */
+    *
+    * @param url
+    * @return the root of the parsed tree
+    */
   def parse(url: String): DomNode = {
     driver.get(url)
     val body = driver.findElementByTagName("body")
@@ -56,7 +57,6 @@ class VisualWebExtractor(headless: Boolean = true, quickRender: Boolean = true) 
     e.findElements(By.xpath("child::*")).filter(_.isDisplayed)
 
   private def toDomNode(id: Int, e: WebElement, parent: Option[DomNode]) = DomNode(
-    parent = parent,
     id = id,
     tagName = e.getTagName,
     cssClasses = e.getAttribute("class"),
@@ -69,7 +69,7 @@ class VisualWebExtractor(headless: Boolean = true, quickRender: Boolean = true) 
 
 }
 
-class JSoupExtractor extends WebExtractor {
+class TagTreeBuilder extends WebExtractor {
 
   def parse(url: String): DomNode = {
     val doc = Jsoup.parse(new URL(url), 2000)
@@ -91,7 +91,6 @@ class JSoupExtractor extends WebExtractor {
   }
 
   private def toDomNode(id: Int, e: Element, parent: Option[DomNode]) = DomNode(
-    parent = parent,
     id = id,
     tagName = e.tagName(),
     cssClasses = e.className(),
