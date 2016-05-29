@@ -1,51 +1,52 @@
 package eu.unicredit.web.hylien
 
 import eu.unicredit.web.Models._
+import scala.language.postfixOps
 
 import scala.util.Random
 
-private[this] object VisualListfinder {
+private[this] object VisualListFinder {
   /**
-    *
-    * @param domNode
-    * @param minsim
-    * @param maxRecordTags
-    * @return return a tuple with lists and non aligned nodes
-    */
+   *
+   * @param domNode
+   * @param minsim
+   * @param maxRecordTags
+   * @return return a tuple with lists and non aligned nodes
+   */
   def find(domNode: DomNode, minsim: Float, maxRecordTags: Int): (Seq[WebList], Seq[DomNode]) = {
 
     val verticalAligned: Map[Int, Seq[DomNode]] =
-      VisualListfinder.verticallyAligned(domNode, maxRecordTags)
+      VisualListFinder.verticallyAligned(domNode, maxRecordTags)
 
     val horizontalAligned: Map[Int, Seq[DomNode]] =
-      VisualListfinder.horizontallyAligned(domNode, maxRecordTags)
+      VisualListFinder.horizontallyAligned(domNode, maxRecordTags)
 
-    var notAligned = VisualListfinder.notAligned(domNode, verticalAligned, horizontalAligned)
+    var notAligned = VisualListFinder.notAligned(domNode, verticalAligned, horizontalAligned)
 
     val verticalList = verticalAligned.map {
       case (pos, list) =>
-        val (similar, nonSimilar) = VisualListfinder.structuralFilter(list, minsim)
+        val (similar, nonSimilar) = VisualListFinder.structuralFilter(list, minsim)
         notAligned = notAligned ++ nonSimilar
         pos -> WebList(domNode, Orientation.vertical, similar)
-    }.values
+    }.filter(_._2.elements.size > 1).values
 
     val horizontalList = horizontalAligned.map {
       case (pos, list) =>
-        val (similar, nonSimilar) = VisualListfinder.structuralFilter(list, minsim)
+        val (similar, nonSimilar) = VisualListFinder.structuralFilter(list, minsim)
         notAligned = notAligned ++ nonSimilar
         pos -> WebList(domNode, Orientation.horizontal, similar)
-    }.values
+    }.filter(_._2.elements.size > 1).values
 
     (verticalList ++ horizontalList toSeq, notAligned.toSeq)
   }
 
   /**
-    *
-    * @param domNode
-    * @param maxRecordTags
-    * @param mapper
-    * @return meta function to get all the aligned elements, fold all the aligned element in a Map[Int, Seq[DomNode] ]
-    */
+   *
+   * @param domNode
+   * @param maxRecordTags
+   * @param mapper
+   * @return meta function to get all the aligned elements, fold all the aligned element in a Map[Int, Seq[DomNode] ]
+   */
   private def aligned(domNode: DomNode, maxRecordTags: Int, mapper: DomNode => (Int, DomNode)): Map[Int, Seq[DomNode]] =
     domNode.children
       .filter(_.bfs.size <= maxRecordTags)
@@ -66,11 +67,17 @@ private[this] object VisualListfinder {
     domNode.children.toSet.diff(aligned)
   }
 
-
+  /**
+   *
+   * @param seq
+   * @param minsim
+   * @return a seq of structurally similar DomNode and a seq of non structurally similar DomNodes
+   */
   private def structuralFilter(seq: Seq[DomNode], minsim: Float): (Seq[DomNode], Seq[DomNode]) = {
     var nonSimilar = List.empty[DomNode]
 
     val similar = Random.shuffle(seq) match {
+      //take the head and for the tail filter all the elements similar to the head
       case head :: tail =>
         head :: tail.filter { n =>
           val dist = Distances.normalizedEditDistance(head.bfs, n.bfs)
@@ -79,7 +86,9 @@ private[this] object VisualListfinder {
         }
     }
 
-    (similar, nonSimilar)
+    if (similar.size > 1) (similar, nonSimilar)
+    else (Seq.empty, similar ++ nonSimilar)
+
   }
 
 }
@@ -87,6 +96,4 @@ private[this] object VisualListfinder {
 object TiledListFinder
 
 object ListMerger
-
-
 
