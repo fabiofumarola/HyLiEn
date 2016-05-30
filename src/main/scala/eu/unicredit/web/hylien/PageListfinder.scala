@@ -86,7 +86,7 @@ private[this] object VisualListFinder {
         }
     }
 
-    if (similar.size > 1) (similar, nonSimilar)
+    if (similar.size > 2) (similar, nonSimilar)
     else (Seq.empty, similar ++ nonSimilar)
 
   }
