@@ -3,7 +3,7 @@ package eu.unicredit.web.hylien
 
 import com.typesafe.scalalogging.Logger
 import eu.unicredit.web.Models.{DomNode, WebList}
-import eu.unicredit.web.{TagTreeBuilder, VisualTagTreeBuilder}
+import eu.unicredit.web.VisualTagTreeBuilder
 import org.slf4j.LoggerFactory
 
 import scala.annotation.tailrec
@@ -27,6 +27,8 @@ class VisualHyLiEn {
         case head :: tail =>
           val (lists, notAligned) = VisualListFinder.find(head, tagSimFactor, maxRecordTags)
           extract0(tail ++ notAligned, acc ++ lists)
+
+        case Nil => acc
       }
 
     extract0(List(root), List.empty)

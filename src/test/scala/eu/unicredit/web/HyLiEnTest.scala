@@ -26,6 +26,7 @@ object HyLiEnTest extends App {
     l.elements.foreach { n =>
       buf ++= s"\t tag = ${n.tagName} \n"
       buf ++= s"\t text = || ${n.text.replace("\n", " ")} || \n"
+      buf ++= s"\t bfs = ${n.bfs}"
       buf ++= "----------------------- \n"
     }
     buf.toString()
