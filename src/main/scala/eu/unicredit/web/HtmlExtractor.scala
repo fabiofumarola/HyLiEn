@@ -63,7 +63,8 @@ class VisualTagTreeBuilder(headless: Boolean = true, quickRender: Boolean = true
     cssSelector = noCssSelector,
     location = Location(e.getLocation.x, e.getLocation.y),
     size = Size(e.getSize.width, e.getSize.height),
-    text = e.getText)
+    text = e.getText,
+    html = e.getAttribute("outerHTML"))
 
   def close() = driver.close()
 
@@ -97,5 +98,6 @@ class TagTreeBuilder extends WebExtractor {
     cssSelector = e.cssSelector(),
     location = noLocation,
     size = noSize,
-    text = e.ownText())
+    text = e.ownText(),
+    html = e.html())
 }

@@ -1,7 +1,11 @@
 package eu.unicredit.web
 
+import org.jsoup.Jsoup
+
 import scala.annotation.tailrec
+import scala.collection.JavaConverters._
 import scala.collection.mutable
+import scala.util.{Failure, Success, Try}
 
 /**
  * Created by fabiofumarola on 24/05/16.
@@ -26,8 +30,26 @@ object Models {
     location: Location,
     size: Size,
     text: String,
-    children: mutable.Buffer[DomNode] = mutable.Buffer.empty[DomNode]) {
+    children: mutable.Buffer[DomNode] = mutable.Buffer.empty[DomNode],
+    html: String) {
     lazy val bfs = DomNode.bfs(this)
+
+    def getUrls(html: String): Seq[String] = {
+      val tryhtml = Try {
+        Jsoup.parse(html)
+          .select("a[href]")
+          .asScala
+          .map(link => link.attr("href"))
+          .toList
+          .filter(s => s.size > 0)
+      }
+      tryhtml match {
+        case Success(lists) => lists
+        case Failure(ex) => List()
+      }
+    }
+
+    lazy val urls = getUrls(html)
   }
 
   object DomNode {
@@ -56,7 +78,11 @@ object Models {
   case class WebList(
     parent: DomNode,
     orientation: Orientation,
-    elements: Seq[DomNode])
+    location: Location,
+    size: Size,
+    elements: Seq[DomNode]){
+    lazy val urls = elements.flatMap(n => n.urls)
+  }
 
 }
 
