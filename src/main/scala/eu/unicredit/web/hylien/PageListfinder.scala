@@ -27,14 +27,14 @@ private[this] object VisualListFinder {
       case (pos, list) =>
         val (similar, nonSimilar) = VisualListFinder.structuralFilter(list, minsim)
         notAligned = notAligned ++ nonSimilar
-        pos -> WebList(domNode, Orientation.vertical, similar)
+        pos -> WebList(domNode, Orientation.vertical, domNode.location, domNode.size ,similar)
     }.filter(_._2.elements.size > 1).values
 
     val horizontalList = horizontalAligned.map {
       case (pos, list) =>
         val (similar, nonSimilar) = VisualListFinder.structuralFilter(list, minsim)
         notAligned = notAligned ++ nonSimilar
-        pos -> WebList(domNode, Orientation.horizontal, similar)
+        pos -> WebList(domNode, Orientation.horizontal, domNode.location, domNode.size, similar)
     }.filter(_._2.elements.size > 1).values
 
     (verticalList ++ horizontalList toSeq, notAligned.toSeq)
@@ -86,7 +86,7 @@ private[this] object VisualListFinder {
         }
     }
 
-    if (similar.size > 2) (similar, nonSimilar)
+    if (similar.size > 1) (similar, nonSimilar)
     else (Seq.empty, similar ++ nonSimilar)
 
   }

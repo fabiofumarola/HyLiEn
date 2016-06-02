@@ -64,7 +64,9 @@ object DomNodeTest extends App {
     cssSelector = "",
     location = noLocation,
     size = noSize,
-    text = ""
+    text = "",
+    html = "<div id=\"my-cs\">\n      <a href=\"http://my.cs.illinois.edu\">MY.CS</a>\n     </div> "
+
   )
 
   val child1 = root.copy(id = 1, tagName = "b", children = mutable.Buffer.empty[DomNode])
@@ -76,7 +78,6 @@ object DomNodeTest extends App {
   child2.children.append(child3)
 
   val bfs = DomNode.bfs(root)
-
   println(bfs)
 
 }
