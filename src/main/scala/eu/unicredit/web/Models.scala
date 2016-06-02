@@ -3,9 +3,9 @@ package eu.unicredit.web
 import org.jsoup.Jsoup
 
 import scala.annotation.tailrec
-import scala.collection.JavaConverters._
+import scala.collection.JavaConversions._
 import scala.collection.mutable
-import scala.util.{Failure, Success, Try}
+import scala.util.{ Failure, Success, Try }
 
 /**
  * Created by fabiofumarola on 24/05/16.
@@ -33,23 +33,7 @@ object Models {
     children: mutable.Buffer[DomNode] = mutable.Buffer.empty[DomNode],
     html: String) {
     lazy val bfs = DomNode.bfs(this)
-
-    def getUrls(html: String): Seq[String] = {
-      val tryhtml = Try {
-        Jsoup.parse(html)
-          .select("a[href]")
-          .asScala
-          .map(link => link.attr("href"))
-          .toList
-          .filter(s => s.size > 0)
-      }
-      tryhtml match {
-        case Success(lists) => lists
-        case Failure(ex) => List()
-      }
-    }
-
-    lazy val urls = getUrls(html)
+    lazy val urls = DomNode.getUrls(html)
   }
 
   object DomNode {
@@ -66,6 +50,13 @@ object Models {
 
       bfs0(n.children, Seq(n.tagName) ++ n.children.map(_.tagName))
     }
+
+    def getUrls(html: String): Seq[String] = Try {
+      Jsoup.parse(html)
+        .select("a[href]")
+        .map(_.attr("href"))
+        .filter(_.length > 0)
+    }.getOrElse(List.empty)
   }
 
   object Orientation extends Enumeration {
@@ -80,7 +71,7 @@ object Models {
     orientation: Orientation,
     location: Location,
     size: Size,
-    elements: Seq[DomNode]){
+    elements: Seq[DomNode]) {
     lazy val urls = elements.flatMap(n => n.urls)
   }
 

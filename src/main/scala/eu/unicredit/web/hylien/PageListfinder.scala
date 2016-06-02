@@ -15,24 +15,20 @@ private[this] object VisualListFinder {
    */
   def find(domNode: DomNode, minsim: Float, maxRecordTags: Int): (Seq[WebList], Seq[DomNode]) = {
 
-    val verticalAligned: Map[Int, Seq[DomNode]] =
-      VisualListFinder.verticallyAligned(domNode, maxRecordTags)
-
-    val horizontalAligned: Map[Int, Seq[DomNode]] =
-      VisualListFinder.horizontallyAligned(domNode, maxRecordTags)
-
-    var notAligned = VisualListFinder.notAligned(domNode, verticalAligned, horizontalAligned)
+    val verticalAligned: Map[Int, Seq[DomNode]] = findVerticallyAligned(domNode, maxRecordTags)
+    val horizontalAligned: Map[Int, Seq[DomNode]] = findHorizontallyAligned(domNode, maxRecordTags)
+    var notAligned = findNotAligned(domNode, verticalAligned, horizontalAligned)
 
     val verticalList = verticalAligned.map {
       case (pos, list) =>
-        val (similar, nonSimilar) = VisualListFinder.structuralFilter(list, minsim)
+        val (similar, nonSimilar) = structuralFilter(list, minsim)
         notAligned = notAligned ++ nonSimilar
         pos -> WebList(domNode, Orientation.vertical, domNode.location, domNode.size ,similar)
     }.filter(_._2.elements.size > 1).values
 
     val horizontalList = horizontalAligned.map {
       case (pos, list) =>
-        val (similar, nonSimilar) = VisualListFinder.structuralFilter(list, minsim)
+        val (similar, nonSimilar) = structuralFilter(list, minsim)
         notAligned = notAligned ++ nonSimilar
         pos -> WebList(domNode, Orientation.horizontal, domNode.location, domNode.size, similar)
     }.filter(_._2.elements.size > 1).values
@@ -56,13 +52,13 @@ private[this] object VisualListFinder {
         map + (pos -> (map.getOrElse(pos, Seq.empty) :+ node))
       }.filter(_._2.size > 1)
 
-  private def verticallyAligned(domNode: DomNode, maxRecordTags: Int) =
+  private def findVerticallyAligned(domNode: DomNode, maxRecordTags: Int) =
     aligned(domNode, maxRecordTags, n => n.location.x -> n)
 
-  private def horizontallyAligned(domNode: DomNode, maxRecordTags: Int) =
+  private def findHorizontallyAligned(domNode: DomNode, maxRecordTags: Int) =
     aligned(domNode, maxRecordTags, n => n.location.y -> n)
 
-  private def notAligned(domNode: DomNode, vertical: Map[Int, Seq[DomNode]], horizontal: Map[Int, Seq[DomNode]]) = {
+  private def findNotAligned(domNode: DomNode, vertical: Map[Int, Seq[DomNode]], horizontal: Map[Int, Seq[DomNode]]) = {
     val aligned = (vertical.values ++ horizontal.values).flatten.toSet
     domNode.children.toSet.diff(aligned)
   }
@@ -86,7 +82,7 @@ private[this] object VisualListFinder {
         }
     }
 
-    if (similar.size > 1) (similar, nonSimilar)
+    if (similar.size > 2) (similar, nonSimilar)
     else (Seq.empty, similar ++ nonSimilar)
 
   }
