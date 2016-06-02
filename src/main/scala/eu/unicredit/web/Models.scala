@@ -37,11 +37,7 @@ object Models {
     def getUrls(html: String): Seq[String] = {
       val tryhtml = Try {
         Jsoup.parse(html)
-          .select("a[href]")
-          .asScala
-          .map(link => link.attr("href"))
-          .toList
-          .filter(s => s.size > 0)
+
       }
       tryhtml match {
         case Success(lists) => lists
