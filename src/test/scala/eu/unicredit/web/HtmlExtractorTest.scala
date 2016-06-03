@@ -62,6 +62,7 @@ object DomNodeTest extends App {
     tagName = "a",
     cssClasses = "strong",
     cssSelector = "",
+    cssProperties = Map.empty,
     location = noLocation,
     size = noSize,
     text = "",

@@ -28,6 +28,7 @@ object Models {
     id: Int,
     tagName: String,
     cssClasses: String,
+    cssProperties: Map[String, String],
     cssSelector: String,
     location: Location,
     size: Size,

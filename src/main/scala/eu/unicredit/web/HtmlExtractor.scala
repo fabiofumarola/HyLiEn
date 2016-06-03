@@ -54,6 +54,25 @@ class VisualTagTreeBuilder(headless: Boolean = true, quickRender: Boolean = true
     root
   }
 
+  private val script =
+    """var s = '';
+       var o = getComputedStyle(arguments[0]);
+       for (var i = 0; i < o.length; i++){
+         s += o[i] + '::' + o.getPropertyValue(o[i])+';';
+       }
+       return s.toString();
+    """.stripMargin
+
+  private def cssStyles(e: WebElement): Map[String, String] = {
+    driver.executeScript(script, e).toString
+      .split(";")
+      .map(_.split("::"))
+      .map{
+        case Array(prop, value) =>
+          prop -> value
+      }.toMap
+  }
+
   private def children(e: WebElement) =
     e.findElements(By.xpath("child::*")).filter(_.isDisplayed)
 
@@ -61,6 +80,7 @@ class VisualTagTreeBuilder(headless: Boolean = true, quickRender: Boolean = true
     id = id,
     tagName = e.getTagName,
     cssClasses = e.getAttribute("class"),
+    cssProperties = cssStyles(e),
     cssSelector = noCssSelector,
     location = Location(e.getLocation.x, e.getLocation.y),
     size = Size(e.getSize.width, e.getSize.height),
@@ -97,6 +117,7 @@ class TagTreeBuilder extends WebExtractor {
     tagName = e.tagName(),
     cssClasses = e.className(),
     cssSelector = e.cssSelector(),
+    cssProperties = Map.empty, //TODO fill me
     location = noLocation,
     size = noSize,
     text = e.ownText(),
