@@ -16,7 +16,7 @@ class VisualHyLiEn {
 
   private val webExtractor = new VisualTagTreeBuilder()
 
-  def extract(url: String, tagSimFactor: Float = 0.4F, maxRecordTags: Int = 30): List[WebList] = {
+  def extract(url: String, tagSimFactor: Float = 0.4F, maxRecordTags: Int = 30): Seq[WebList] = {
     val root = webExtractor.parse(url)
     logger.debug(s"parsed ${url}, start extracting lists")
 
@@ -25,13 +25,15 @@ class VisualHyLiEn {
       if (notAligned.isEmpty) acc
       else notAligned match {
         case head :: tail =>
-          val (lists, notAligned) = VisualListFinder.find(head, tagSimFactor, maxRecordTags)
+          val (lists, notAligned) = VisualListFinder.find(url, head, tagSimFactor, maxRecordTags)
           extract0(tail ++ notAligned, acc ++ lists)
 
         case Nil => acc
       }
 
-    extract0(List(root), List.empty)
+    val lists = extract0(List(root), List.empty)
+    val filterEmptyText = WebListFilters.filterEmptyText(lists)
+    WebListFilters.filterDuplicates(filterEmptyText)
   }
 
   def close() = webExtractor.close()

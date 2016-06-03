@@ -2,11 +2,11 @@ package eu.unicredit.web
 
 import java.net.URL
 
-import com.machinepublishers.jbrowserdriver.{JBrowserDriver, Settings, Timezone}
+import com.machinepublishers.jbrowserdriver.{ JBrowserDriver, Settings, Timezone }
 import eu.unicredit.web.Models._
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
-import org.openqa.selenium.{By, Dimension, WebElement}
+import org.openqa.selenium.{ By, Dimension, WebElement }
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable
@@ -16,14 +16,15 @@ trait WebExtractor {
 }
 
 /**
-  * Created by fabiofumarola on 24/05/16.
-  */
-class VisualTagTreeBuilder(headless: Boolean = true, quickRender: Boolean = true) extends WebExtractor {
+ * Created by fabiofumarola on 24/05/16.
+ */
+class VisualTagTreeBuilder(headless: Boolean = true, quickRender: Boolean = true,
+  browserSize: BrowserSize = BrowserSize(1920, 1080)) extends WebExtractor {
 
   private val settings = Settings.builder()
     .timezone(Timezone.EUROPE_ROME)
     .headless(headless)
-    .screen(new Dimension(1920, 1080))
+    .screen(new Dimension(browserSize.width, browserSize.height))
     .cache(true)
     .quickRender(quickRender)
     .ajaxWait(300)
@@ -32,10 +33,10 @@ class VisualTagTreeBuilder(headless: Boolean = true, quickRender: Boolean = true
   private val driver = new JBrowserDriver(settings)
 
   /**
-    *
-    * @param url
-    * @return the root of the parsed tree
-    */
+   *
+   * @param url
+   * @return the root of the parsed tree
+   */
   def parse(url: String): DomNode = {
     driver.get(url)
     val body = driver.findElementByTagName("body")
