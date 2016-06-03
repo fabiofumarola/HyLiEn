@@ -9,10 +9,12 @@ import eu.unicredit.web.hylien.VisualHyLiEn
 object HyLiEnTest extends App {
 
   val hylien = new VisualHyLiEn()
-  val result = hylien.extract("http://www.cs.illinois.edu/directory/faculty")
+  val result = hylien.extract("http://www.cs.illinois.edu")
+  ("http://www.cs.illinois.edu/directory/faculty")
+  //("https://it.wikipedia.org/wiki/Fiat_Chrysler_Automobiles")
   //("http://www.cs.ox.ac.uk/")
 
-  //("http://www.cs.illinois.edu") //("http://www.harvard.edu/") //("http://cs.stanford.edu/")
+  // //("http://www.harvard.edu/") //("http://cs.stanford.edu/")
 
   println(s"Got ${result.size} lists")
   result.foreach { l =>

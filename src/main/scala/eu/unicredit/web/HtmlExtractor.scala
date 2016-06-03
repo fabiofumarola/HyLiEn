@@ -66,8 +66,9 @@ class VisualTagTreeBuilder(headless: Boolean = true, quickRender: Boolean = true
   private def cssStyles(e: WebElement): Map[String, String] = {
     driver.executeScript(script, e).toString
       .split(";")
+      .filter(_.contains("::"))
       .map(_.split("::"))
-      .map{
+      .map {
         case Array(prop, value) =>
           prop -> value
       }.toMap

@@ -18,8 +18,9 @@ private[this] object VisualListFinder {
     domNode.tagName match {
       //GOT from MDR
       //TODO add other stylish tags
-      case "p" =>
-        (Seq.empty[WebList], domNode.children)
+      case "p" => (Seq.empty[WebList], domNode.children)
+
+      case "span" => (Seq.empty[WebList], domNode.children)
 
       case _ =>
 
