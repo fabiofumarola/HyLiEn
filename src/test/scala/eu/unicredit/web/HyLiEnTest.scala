@@ -1,6 +1,6 @@
 package eu.unicredit.web
 
-import eu.unicredit.web.Models.WebList
+import eu.unicredit.web.Models.{DomNode, WebList}
 import eu.unicredit.web.hylien.VisualHyLiEn
 
 /**
@@ -9,8 +9,11 @@ import eu.unicredit.web.hylien.VisualHyLiEn
 object HyLiEnTest extends App {
 
   val hylien = new VisualHyLiEn()
-  val result = hylien.extract("http://www.cs.illinois.edu")
+  val result = hylien.extract("http://www.cs.ox.ac.uk/")
+  //("http://www.cs.illinois.edu/directory/faculty")
+  //("http://www.cs.illinois.edu") //("http://www.harvard.edu/") //("http://cs.stanford.edu/")
 
+  println(s"Got ${result.size} lists")
   result.foreach { l =>
     val r = toString(l)
     println(r)
@@ -31,6 +34,9 @@ object HyLiEnTest extends App {
       //buf ++= s"\t html = || ${n.html} || \n"
       buf ++= s"\t bfs = ${n.bfs}\n"
       buf ++= s"\t urls = ${n.urls}\n"
+      buf ++= s"\t urls2 = ${DomNode.getUrls(n.html, l.pageUrl)} \n"
+      buf ++= s"\t css = ${n.cssClasses} \n"
+      buf ++= s"\t CssS = ${n.styles} \n"
       buf ++= "----------------------- \n"
     }
     buf.toString()

@@ -13,27 +13,41 @@ private[this] object VisualListFinder {
    * @param maxRecordTags
    * @return return a tuple with lists and non aligned nodes
    */
-  def find(domNode: DomNode, minsim: Float, maxRecordTags: Int): (Seq[WebList], Seq[DomNode]) = {
+  def find(pageUrl: String, domNode: DomNode, minsim: Float, maxRecordTags: Int): (Seq[WebList], Seq[DomNode]) = {
 
-    val verticalAligned: Map[Int, Seq[DomNode]] = findVerticallyAligned(domNode, maxRecordTags)
-    val horizontalAligned: Map[Int, Seq[DomNode]] = findHorizontallyAligned(domNode, maxRecordTags)
-    var notAligned = findNotAligned(domNode, verticalAligned, horizontalAligned)
+    domNode.tagName match {
+      //GOT from MDR
+      //TODO add other stylish tags
+      case "p" =>
+        (Seq.empty[WebList], domNode.children)
 
-    val verticalList = verticalAligned.map {
-      case (pos, list) =>
-        val (similar, nonSimilar) = structuralFilter(list, minsim)
-        notAligned = notAligned ++ nonSimilar
-        pos -> WebList(domNode, Orientation.vertical, domNode.location, domNode.size ,similar)
-    }.filter(_._2.elements.size > 1).values
+      case _ =>
 
-    val horizontalList = horizontalAligned.map {
-      case (pos, list) =>
-        val (similar, nonSimilar) = structuralFilter(list, minsim)
-        notAligned = notAligned ++ nonSimilar
-        pos -> WebList(domNode, Orientation.horizontal, domNode.location, domNode.size, similar)
-    }.filter(_._2.elements.size > 1).values
+        val verticalAligned: Map[Int, Seq[DomNode]] = findVerticallyAligned(domNode, maxRecordTags)
+        val horizontalAligned: Map[Int, Seq[DomNode]] = findHorizontallyAligned(domNode, maxRecordTags)
+        var notAligned = findNotAligned(domNode, verticalAligned, horizontalAligned)
 
-    (verticalList ++ horizontalList toSeq, notAligned.toSeq)
+        val verticalList = verticalAligned.map {
+          case (pos, list) =>
+            val (similar, nonSimilar) = structuralFilter(list, minsim)
+            notAligned = notAligned ++ nonSimilar
+            pos -> WebList(pageUrl, domNode, Orientation.vertical, domNode.location, domNode.size, similar)
+        }.filter(_._2.elements.size > 1).values
+
+        val horizontalList = horizontalAligned.map {
+          case (pos, list) =>
+            val (similar, nonSimilar) = structuralFilter(list, minsim)
+            notAligned = notAligned ++ nonSimilar
+            pos -> WebList(pageUrl, domNode, Orientation.horizontal, domNode.location, domNode.size, similar)
+        }.filter(_._2.elements.size > 1).values
+
+        val webLists = verticalList ++ horizontalList
+        //be sure to not include list elements inside notAligned
+        notAligned = notAligned &~ webLists.flatMap(_.elements).toSet
+
+        (webLists.toSeq, notAligned.toSeq)
+    }
+
   }
 
   /**
@@ -67,7 +81,7 @@ private[this] object VisualListFinder {
    *
    * @param seq
    * @param minsim
-   * @return a seq of structurally similar DomNode and a seq of non structurally similar DomNodes
+   * @return (Similars, NonSimilars) a seq of structurally similar DomNode and a seq of non structurally similar DomNodes
    */
   private def structuralFilter(seq: Seq[DomNode], minsim: Float): (Seq[DomNode], Seq[DomNode]) = {
     var nonSimilar = List.empty[DomNode]
@@ -84,12 +98,12 @@ private[this] object VisualListFinder {
 
     if (similar.size > 2) (similar, nonSimilar)
     else (Seq.empty, similar ++ nonSimilar)
-
   }
 
 }
 
-object TiledListFinder
-
-object ListMerger
+//
+//object TiledListFinder
+//
+//object ListMerger
 

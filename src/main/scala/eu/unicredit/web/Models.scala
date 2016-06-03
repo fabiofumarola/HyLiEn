@@ -12,6 +12,8 @@ import scala.util.{ Failure, Success, Try }
  */
 object Models {
 
+  case class BrowserSize(width: Int, height: Int)
+
   case class Location(x: Int, y: Int)
 
   val noLocation = Location(-1, -1)
@@ -34,6 +36,7 @@ object Models {
     html: String) {
     lazy val bfs = DomNode.bfs(this)
     lazy val urls = DomNode.getUrls(html)
+    lazy val styles = DomNode.styles(this)
   }
 
   object DomNode {
@@ -51,12 +54,31 @@ object Models {
       bfs0(n.children, Seq(n.tagName) ++ n.children.map(_.tagName))
     }
 
+    def getUrls(html: String, baseUri: String) = Try {
+      Jsoup.parse(html, baseUri)
+        .select("a[href]")
+        .map(n => n.text() -> n.attr("abs:href")).toMap
+    }
+
     def getUrls(html: String): Seq[String] = Try {
       Jsoup.parse(html)
         .select("a[href]")
         .map(_.attr("href"))
         .filter(_.length > 0)
     }.getOrElse(List.empty)
+
+    def styles(n: DomNode): Seq[String] = {
+
+      @tailrec
+      def styles0(nodes: Seq[DomNode], acc: Seq[String]): Seq[String] =
+        if (nodes.isEmpty) acc
+        else {
+          val (head, tail) = (nodes.head, nodes.tail)
+          styles0(tail ++ head.children, acc ++ head.children.map(_.cssClasses))
+        }
+
+      styles0(n.children, Seq(n.cssClasses) ++ n.children.map(_.cssClasses))
+    }
   }
 
   object Orientation extends Enumeration {
@@ -67,6 +89,7 @@ object Models {
   import Orientation._
 
   case class WebList(
+    pageUrl: String,
     parent: DomNode,
     orientation: Orientation,
     location: Location,
