@@ -14,11 +14,23 @@ object Models {
 
   case class BrowserSize(width: Int, height: Int)
 
-  case class Location(x: Int, y: Int)
+  case class Location(x: Int, y: Int) {
+    def +(that: Location) = {
+      Location(
+        x = if (this.x < that.x) this.x else that.x,
+        y = if (this.y < that.y) this.y else that.y)
+    }
+  }
 
   val noLocation = Location(-1, -1)
 
-  case class Size(width: Int, height: Int)
+  case class Size(width: Int, height: Int) {
+    def +(that: Size): Size = {
+      Size(
+        width = this.width + that.width,
+        height = this.height + that.height)
+    }
+  }
 
   val noSize = Size(-1, -1)
 
@@ -26,6 +38,7 @@ object Models {
 
   case class DomNode(
     id: Int,
+    parentId: Int,
     tagName: String,
     cssClasses: String,
     cssProperties: Map[String, String],
@@ -95,9 +108,22 @@ object Models {
     orientation: Orientation,
     location: Location,
     size: Size,
-    elements: Seq[DomNode]) {
-    lazy val urls = elements.flatMap(n => n.urls)
+    elements: Seq[DomNode],
+    from: Seq[WebList] = Seq.empty) {
+    lazy val urls = elements.flatMap(_.urls)
+    lazy val bfs = elements.flatMap(_.bfs)
   }
+
+  //  case class TiledWebList(
+  //    pageUrl: String,
+  //    parent: DomNode,
+  //    orientation: Orientation = Orientation.tiled,
+  //    location: Location,
+  //    size: Size,
+  //    elements: Seq[WebList]) {
+  //    lazy val urls = elements.flatMap(_.urls)
+  //    lazy val bfs = elements.flatMap(_.bfs)
+  //  }
 
 }
 

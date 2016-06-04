@@ -9,15 +9,15 @@ import eu.unicredit.web.hylien.VisualHyLiEn
 object HyLiEnTest extends App {
 
   val hylien = new VisualHyLiEn()
-  val result = hylien.extract("http://www.cs.illinois.edu")
-  ("http://www.cs.illinois.edu/directory/faculty")
+  val lists = hylien.extract("http://www.cs.illinois.edu/directory/faculty")
+
   //("https://it.wikipedia.org/wiki/Fiat_Chrysler_Automobiles")
   //("http://www.cs.ox.ac.uk/")
 
   // //("http://www.harvard.edu/") //("http://cs.stanford.edu/")
 
-  println(s"Got ${result.size} lists")
-  result.foreach { l =>
+  println(s"Got ${lists.size} lists")
+  lists.foreach { l =>
     val r = toString(l)
     println(r)
   }
@@ -30,7 +30,7 @@ object HyLiEnTest extends App {
     buf ++= s"Printing ${l.orientation} of by ${l.elements.size} elements \n"
     buf ++= s"parent dom tag = ${l.parent.tagName} \n"
     buf ++= s"location = ${l.location} \n"
-    buf ++= s"location = ${l.size} \n"
+    buf ++= s"size = ${l.size} \n"
     l.elements.foreach { n =>
       buf ++= s"\t tag = ${n.tagName} \n"
       buf ++= s"\t text = || ${n.text.replace("\n", " ")} || \n"
@@ -45,6 +45,4 @@ object HyLiEnTest extends App {
     }
     buf.toString()
   }
-
-
 }

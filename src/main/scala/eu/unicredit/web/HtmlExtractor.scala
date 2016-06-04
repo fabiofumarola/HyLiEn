@@ -40,13 +40,14 @@ class VisualTagTreeBuilder(headless: Boolean = true, quickRender: Boolean = true
   def parse(url: String): DomNode = {
     driver.get(url)
     val body = driver.findElementByTagName("body")
-    val root = toDomNode(1, body, None)
+    val root = toDomNode(1, -1, body, None)
     val queue = mutable.Queue(children(body).map((root, _)): _*)
 
     var counter = 2
     while (queue.nonEmpty) {
       val (parent, e) = queue.dequeue()
-      val node = toDomNode(counter, e, Some(parent))
+      e.getRect
+      val node = toDomNode(counter, parent.id, e, Some(parent))
       counter += 1
       parent.children.append(node)
       queue.enqueue(children(e).map((node, _)): _*)
@@ -77,8 +78,9 @@ class VisualTagTreeBuilder(headless: Boolean = true, quickRender: Boolean = true
   private def children(e: WebElement) =
     e.findElements(By.xpath("child::*")).filter(_.isDisplayed)
 
-  private def toDomNode(id: Int, e: WebElement, parent: Option[DomNode]) = DomNode(
+  private def toDomNode(id: Int, parentId: Int, e: WebElement, parent: Option[DomNode]) = DomNode(
     id = id,
+    parentId = parentId,
     tagName = e.getTagName,
     cssClasses = e.getAttribute("class"),
     cssProperties = cssStyles(e),
@@ -97,14 +99,14 @@ class TagTreeBuilder extends WebExtractor {
   def parse(url: String): DomNode = {
     val doc = Jsoup.parse(new URL(url), 2000)
     val body = doc.body()
-    val root = toDomNode(1, body, None)
+    val root = toDomNode(1, -1, body, None)
     val queue = mutable.Queue(body.children()
       .filterNot(_.cssSelector().contains("script")).map((root, _)): _*)
 
     var counter = 2
     while (queue.nonEmpty) {
       val (parent, e) = queue.dequeue()
-      val node = toDomNode(counter, e, Some(parent))
+      val node = toDomNode(counter, parent.id, e, Some(parent))
       counter += 1
       parent.children.append(node)
       queue.enqueue(e.children().map((root, _)): _*)
@@ -113,8 +115,9 @@ class TagTreeBuilder extends WebExtractor {
     root
   }
 
-  private def toDomNode(id: Int, e: Element, parent: Option[DomNode]) = DomNode(
+  private def toDomNode(id: Int, parentId: Int, e: Element, parent: Option[DomNode]) = DomNode(
     id = id,
+    parentId = parentId,
     tagName = e.tagName(),
     cssClasses = e.className(),
     cssSelector = e.cssSelector(),

@@ -18,7 +18,7 @@ class VisualHyLiEn {
 
   def extract(url: String, tagSimFactor: Float = 0.4F, maxRecordTags: Int = 30): Seq[WebList] = {
     val root = webExtractor.parse(url)
-    logger.debug(s"parsed ${url}, start extracting lists")
+    logger.debug(s"parsed $url, start extracting lists")
 
     @tailrec
     def extract0(notAligned: List[DomNode], acc: List[WebList]): List[WebList] =
@@ -32,8 +32,19 @@ class VisualHyLiEn {
       }
 
     val lists = extract0(List(root), List.empty)
-    val filterEmptyText = WebListFilters.filterEmptyText(lists)
-    WebListFilters.filterDuplicates(filterEmptyText)
+
+    //compose functions applying from the last to the first
+    val filters = WebListFilters.tiledListsFinder(tagSimFactor) _ compose
+      WebListFilters.filterDuplicates compose
+      WebListFilters.filterEmptyText
+
+    filters(lists)
+
+//
+//    val filterEmptyText = WebListFilters.filterEmptyText(lists)
+////    WebListFilters.tiledListsFinder(
+//      WebListFilters.filterDuplicates(filterEmptyText)
+////    , tagSimFactor)
   }
 
   def close() = webExtractor.close()
