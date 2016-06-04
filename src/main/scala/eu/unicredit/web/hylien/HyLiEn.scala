@@ -1,20 +1,24 @@
 package eu.unicredit.web.hylien
 
-
 import com.typesafe.scalalogging.Logger
-import eu.unicredit.web.Models.{DomNode, WebList}
+import eu.unicredit.web.Models.{ BrowserSize, DomNode, WebList }
 import eu.unicredit.web.VisualTagTreeBuilder
 import org.slf4j.LoggerFactory
 
 import scala.annotation.tailrec
 
 /**
-  * Created by fabiofumarola on 25/05/16.
-  */
-class VisualHyLiEn {
+ * Created by fabiofumarola on 25/05/16.
+ */
+class VisualHyLiEn(headless: Boolean = true, quickRender: Boolean = true,
+  logReqs: Boolean = false, browserSize: BrowserSize = BrowserSize(1920, 1080)) {
   private val logger = Logger(LoggerFactory.getLogger("HyLiEn"))
 
-  private val webExtractor = new VisualTagTreeBuilder()
+  private val webExtractor = new VisualTagTreeBuilder(
+    headless = headless,
+    quickRender = quickRender,
+    logReqs = logReqs,
+    browserSize = browserSize)
 
   def extract(url: String, tagSimFactor: Float = 0.4F, maxRecordTags: Int = 30): Seq[WebList] = {
     val root = webExtractor.parse(url)
@@ -40,11 +44,11 @@ class VisualHyLiEn {
 
     filters(lists)
 
-//
-//    val filterEmptyText = WebListFilters.filterEmptyText(lists)
-////    WebListFilters.tiledListsFinder(
-//      WebListFilters.filterDuplicates(filterEmptyText)
-////    , tagSimFactor)
+    //
+    //    val filterEmptyText = WebListFilters.filterEmptyText(lists)
+    ////    WebListFilters.tiledListsFinder(
+    //      WebListFilters.filterDuplicates(filterEmptyText)
+    ////    , tagSimFactor)
   }
 
   def close() = webExtractor.close()

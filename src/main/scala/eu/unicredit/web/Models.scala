@@ -20,6 +20,7 @@ object Models {
         x = if (this.x < that.x) this.x else that.x,
         y = if (this.y < that.y) this.y else that.y)
     }
+
   }
 
   val noLocation = Location(-1, -1)
@@ -113,17 +114,6 @@ object Models {
     lazy val urls = elements.flatMap(_.urls)
     lazy val bfs = elements.flatMap(_.bfs)
   }
-
-  //  case class TiledWebList(
-  //    pageUrl: String,
-  //    parent: DomNode,
-  //    orientation: Orientation = Orientation.tiled,
-  //    location: Location,
-  //    size: Size,
-  //    elements: Seq[WebList]) {
-  //    lazy val urls = elements.flatMap(_.urls)
-  //    lazy val bfs = elements.flatMap(_.bfs)
-  //  }
 
 }
 

@@ -1,15 +1,22 @@
 package eu.unicredit.web
 
-import eu.unicredit.web.Models.{DomNode, WebList}
+import eu.unicredit.web.Models.{ BrowserSize, DomNode, WebList }
 import eu.unicredit.web.hylien.VisualHyLiEn
 
 /**
-  * Created by fabiofumarola on 29/05/16.
-  */
+ * Created by fabiofumarola on 29/05/16.
+ */
 object HyLiEnTest extends App {
 
-  val hylien = new VisualHyLiEn()
-  val lists = hylien.extract("http://www.cs.illinois.edu/directory/faculty")
+  val hylien = new VisualHyLiEn(
+    headless = true, quickRender = true,
+    logReqs = false, browserSize = BrowserSize(1920, 1080))
+
+  val lists = hylien.extract("https://it.wikipedia.org/wiki/Fiat_Chrysler_Automobiles")
+
+  //("http://www.cs.illinois.edu")
+
+  //("http://www.cs.illinois.edu/directory/faculty")
 
   //("https://it.wikipedia.org/wiki/Fiat_Chrysler_Automobiles")
   //("http://www.cs.ox.ac.uk/")
@@ -24,10 +31,9 @@ object HyLiEnTest extends App {
 
   hylien.close()
 
-
   def toString(l: WebList): String = {
     val buf = new StringBuilder
-    buf ++= s"Printing ${l.orientation} of by ${l.elements.size} elements \n"
+    buf ++= s"Printing ${l.orientation} of by ${l.elements.size} elements obtained merging ${l.from.size} lists \n"
     buf ++= s"parent dom tag = ${l.parent.tagName} \n"
     buf ++= s"location = ${l.location} \n"
     buf ++= s"size = ${l.size} \n"

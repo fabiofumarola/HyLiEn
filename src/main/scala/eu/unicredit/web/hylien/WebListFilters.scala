@@ -33,7 +33,7 @@ private[this] object WebListFilters extends LazyLogging {
   def filterEmptyText(list: Seq[WebList]): Seq[WebList] =
     list.filter { l =>
       //test that the it does have text
-      l.elements.map(_.text)
+      l.elements.map(_.text.replace(" ", ""))
         .reduce(_ + _).nonEmpty
     }
 
@@ -62,7 +62,6 @@ private[this] object WebListFilters extends LazyLogging {
             if (li.orientation == lj.orientation &&
               (li.location.x == lj.location.x || lj.location.y == lj.location.y)) {
               if (Distances.normalizedEditDistance(li.bfs, lj.bfs) <= minsim) {
-
                 tiledList = tiledList.copy(
                   size = li.size + lj.size,
                   location = li.location + lj.location,
@@ -72,7 +71,7 @@ private[this] object WebListFilters extends LazyLogging {
             }
           }
         }
-        if (tiledList.elements.length > 1) {
+        if (tiledList.from.length > 1) {
           toRemove ++= tiledList.from
           tiledLists +:= tiledList
         }

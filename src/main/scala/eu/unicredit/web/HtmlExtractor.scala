@@ -2,7 +2,7 @@ package eu.unicredit.web
 
 import java.net.URL
 
-import com.machinepublishers.jbrowserdriver.{ JBrowserDriver, Settings, Timezone }
+import com.machinepublishers.jbrowserdriver.{ JBrowserDriver, Settings, Timezone, UserAgent }
 import eu.unicredit.web.Models._
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -19,7 +19,7 @@ trait WebExtractor {
  * Created by fabiofumarola on 24/05/16.
  */
 class VisualTagTreeBuilder(headless: Boolean = true, quickRender: Boolean = true,
-  browserSize: BrowserSize = BrowserSize(1920, 1080)) extends WebExtractor {
+  logReqs: Boolean = false, browserSize: BrowserSize = BrowserSize(1920, 1080)) extends WebExtractor {
 
   private val settings = Settings.builder()
     .timezone(Timezone.EUROPE_ROME)
@@ -28,6 +28,8 @@ class VisualTagTreeBuilder(headless: Boolean = true, quickRender: Boolean = true
     .cache(true)
     .quickRender(quickRender)
     .ajaxWait(300)
+    .userAgent(UserAgent.CHROME)
+    .logTrace(logReqs)
     .build()
 
   private val driver = new JBrowserDriver(settings)
