@@ -59,6 +59,7 @@ object DomNodeTest extends App {
 
   val root = DomNode(
     id = 1,
+    parentId = -1,
     tagName = "a",
     cssClasses = "strong",
     cssSelector = "",
