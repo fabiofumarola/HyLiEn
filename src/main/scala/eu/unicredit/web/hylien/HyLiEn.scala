@@ -44,11 +44,6 @@ class VisualHyLiEn(headless: Boolean = true, quickRender: Boolean = true,
 
     filters(lists)
 
-    //
-    //    val filterEmptyText = WebListFilters.filterEmptyText(lists)
-    ////    WebListFilters.tiledListsFinder(
-    //      WebListFilters.filterDuplicates(filterEmptyText)
-    ////    , tagSimFactor)
   }
 
   def close() = webExtractor.close()

@@ -41,7 +41,7 @@ object Models {
     id: Int,
     parentId: Int,
     tagName: String,
-    cssClasses: String,
+    cssClass: String,
     cssProperties: Map[String, String],
     cssSelector: String,
     location: Location,
@@ -51,13 +51,13 @@ object Models {
     html: String) {
     lazy val bfs = DomNode.bfs(this)
     lazy val urls = DomNode.getUrls(html)
-    lazy val styles = DomNode.styles(this)
+    lazy val bfsCssClasses = DomNode.bfsCssClasses(this)
+
   }
 
   object DomNode {
 
     def bfs(n: DomNode): Seq[String] = {
-
       @tailrec
       def bfs0(nodes: Seq[DomNode], acc: Seq[String]): Seq[String] =
         if (nodes.isEmpty) acc
@@ -82,17 +82,17 @@ object Models {
         .filter(_.length > 0)
     }.getOrElse(List.empty)
 
-    def styles(n: DomNode): Seq[String] = {
+    def bfsCssClasses(n: DomNode): Seq[String] = {
 
       @tailrec
       def styles0(nodes: Seq[DomNode], acc: Seq[String]): Seq[String] =
         if (nodes.isEmpty) acc
         else {
           val (head, tail) = (nodes.head, nodes.tail)
-          styles0(tail ++ head.children, acc ++ head.children.map(_.cssClasses))
+          styles0(tail ++ head.children, acc ++ head.children.map(_.cssClass))
         }
 
-      styles0(n.children, Seq(n.cssClasses) ++ n.children.map(_.cssClasses))
+      styles0(n.children, Seq(n.cssClass) ++ n.children.map(_.cssClass))
     }
   }
 
