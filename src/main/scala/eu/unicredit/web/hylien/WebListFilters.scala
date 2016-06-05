@@ -1,7 +1,7 @@
 package eu.unicredit.web.hylien
 
 import com.typesafe.scalalogging.LazyLogging
-import eu.unicredit.web.Models.{Orientation, WebList}
+import eu.unicredit.web.Models.{Location, Orientation, WebList}
 
 private[this] object WebListFilters extends LazyLogging {
 
@@ -58,9 +58,10 @@ private[this] object WebListFilters extends LazyLogging {
         for (j <- i + 1 until lists.size) {
           val lj = lists(j)
           if (!toRemove.contains(lj)) {
+
             //if they have the same orientation and are aligned for x or y
             if (li.orientation == lj.orientation &&
-              (li.location.x == lj.location.x || lj.location.y == lj.location.y)) {
+              (li.location.x == lj.location.x || li.location.y == lj.location.y)) {
               if (Distances.normalizedEditDistance(li.bfs, lj.bfs) <= minsim) {
                 tiledList = tiledList.copy(
                   size = li.size + lj.size,

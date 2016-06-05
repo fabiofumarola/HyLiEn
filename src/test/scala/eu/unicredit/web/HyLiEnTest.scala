@@ -44,11 +44,18 @@ object HyLiEnTest extends App {
       buf ++= s"\t bfs = ${n.bfs}\n"
       buf ++= s"\t urls = ${n.urls}\n"
       buf ++= s"\t urls absolutes = ${DomNode.getUrls(n.html, l.pageUrl)} \n"
-      buf ++= s"\t node class attribute = ${n.cssClasses} \n"
+      buf ++= s"\t node class attribute = ${n.cssClass} \n"
       buf ++= s"\t node MapCssProps = ${n.cssProperties} \n"
-      buf ++= s"\t BFS nodes Styles = ${n.styles} \n"
+      buf ++= s"\t BFS nodes Styles = ${n.bfsCssClasses} \n"
       buf ++= "----------------------- \n"
     }
+
+    if (l.from.size > 1){
+      buf ++= "########################### \n"
+      l.from.foreach(p => buf ++= toString(p))
+      buf ++= "########################### \n"
+    }
+
     buf.toString()
   }
 }

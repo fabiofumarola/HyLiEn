@@ -74,7 +74,9 @@ class VisualTagTreeBuilder(headless: Boolean = true, quickRender: Boolean = true
       .map {
         case Array(prop, value) =>
           prop -> value
-      }.toMap
+      }
+      .toMap
+      .filterNot(_._1.startsWith("-webkit"))
   }
 
   private def children(e: WebElement) =
@@ -84,7 +86,7 @@ class VisualTagTreeBuilder(headless: Boolean = true, quickRender: Boolean = true
     id = id,
     parentId = parentId,
     tagName = e.getTagName,
-    cssClasses = e.getAttribute("class"),
+    cssClass = e.getAttribute("class"),
     cssProperties = cssStyles(e),
     cssSelector = noCssSelector,
     location = Location(e.getLocation.x, e.getLocation.y),
@@ -121,7 +123,7 @@ class TagTreeBuilder extends WebExtractor {
     id = id,
     parentId = parentId,
     tagName = e.tagName(),
-    cssClasses = e.className(),
+    cssClass = e.className(),
     cssSelector = e.cssSelector(),
     cssProperties = Map.empty, //TODO fill me
     location = noLocation,
