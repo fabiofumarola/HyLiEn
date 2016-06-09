@@ -12,9 +12,11 @@ object HyLiEnTest extends App {
     headless = true, quickRender = true,
     logReqs = false, browserSize = BrowserSize(1920, 1080))
 
-  val lists = hylien.extract("https://it.wikipedia.org/wiki/Fiat_Chrysler_Automobiles")
+  val lists = hylien.extract("http://www.cs.illinois.edu")
 
-  //("http://www.cs.illinois.edu")
+  //("https://it.wikipedia.org/wiki/Fiat_Chrysler_Automobiles")
+
+
 
   //("http://www.cs.illinois.edu/directory/faculty")
 
