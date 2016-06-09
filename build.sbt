@@ -19,7 +19,7 @@ lazy val root = (project in file("."))
       "org.jsoup" % "jsoup" % "1.9.2",
       "com.typesafe.scala-logging" % "scala-logging_2.11" % "3.4.0",
       "ch.qos.logback" % "logback-classic" % "1.1.7",
-      "com.rockymadden.stringmetric" % "stringmetric-core_2.11" % "0.27.4"
-
-)
+      "com.rockymadden.stringmetric" % "stringmetric-core_2.11" % "0.27.4",
+      "io.github.lukehutch" % "fast-classpath-scanner" % "1.9.19"
+    )
   )
