@@ -15,7 +15,7 @@ lazy val root = (project in file("."))
  .settings(commons: _*)
   .settings(
     libraryDependencies ++= Seq(
-      "com.machinepublishers" % "jbrowserdriver" % "0.14.4",
+      "com.machinepublishers" % "jbrowserdriver" % "0.14.5",
       "org.jsoup" % "jsoup" % "1.9.2",
       "com.typesafe.scala-logging" % "scala-logging_2.11" % "3.4.0",
       "ch.qos.logback" % "logback-classic" % "1.1.7",
