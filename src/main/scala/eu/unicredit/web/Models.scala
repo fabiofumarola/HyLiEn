@@ -52,10 +52,22 @@ object Models {
     lazy val bfs = DomNode.bfs(this)
     lazy val urls = DomNode.getUrls(html)
     lazy val bfsCssClasses = DomNode.bfsCssClasses(this)
-
+    lazy val visualFeatures = DomNode.visualFeatures(this)
   }
 
   object DomNode {
+
+    def visualFeatures(n: DomNode): Map[String,String] = {
+      val features = Seq("font-size", "color", "background-color",
+        "font-family", "font-weight", "fill")
+
+      features
+        .map(v => v -> n.cssProperties.get(v))
+        .filter(_._2.nonEmpty)
+        .map(kv => kv._1 -> kv._2.get)
+        .toMap
+
+    }
 
     def bfs(n: DomNode): Seq[String] = {
       @tailrec
