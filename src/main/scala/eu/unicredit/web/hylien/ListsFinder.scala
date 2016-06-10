@@ -2,8 +2,8 @@ package eu.unicredit.web.hylien
 
 import eu.unicredit.web.Models._
 import scala.language.postfixOps
-
 import scala.util.Random
+
 
 private[this] object VisualListFinder {
   /**
@@ -101,14 +101,4 @@ private[this] object VisualListFinder {
     else (Seq.empty, similar ++ nonSimilar)
   }
 
-//  private def sameVisualFeatures(a: DomNode, b: DomNode) = {
-//    a.cssProperties.get("font-size")
-//    a.cssProperties.get("color")
-//    a.cssProperties.get("background-color")
-//    a.cssProperties.get("width")
-//    a.cssProperties.get("height")
-//    a.cssProperties.get("font-family")
-//    a.cssProperties.get("font-weight")
-//    a.cssProperties.get("fill")
-//  }
 }

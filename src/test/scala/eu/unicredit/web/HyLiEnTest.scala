@@ -12,15 +12,15 @@ object HyLiEnTest extends App {
     headless = true, quickRender = true,
     logReqs = false, browserSize = BrowserSize(1920, 1080))
 
-  val lists = hylien.extract("http://www.cs.illinois.edu")
+  val lists = hylien.extract("http://www.cs.illinois.edu/directory/faculty")
+
+  //("http://www.cs.illinois.edu")
 
   //("https://it.wikipedia.org/wiki/Fiat_Chrysler_Automobiles")
-
-
+ //("http://www.bsvillage.com/Piscine-Fuori-Terra/")
 
   //("http://www.cs.illinois.edu/directory/faculty")
 
-  //("https://it.wikipedia.org/wiki/Fiat_Chrysler_Automobiles")
   //("http://www.cs.ox.ac.uk/")
 
   // //("http://www.harvard.edu/") //("http://cs.stanford.edu/")
@@ -39,6 +39,7 @@ object HyLiEnTest extends App {
     buf ++= s"parent dom tag = ${l.parent.tagName} \n"
     buf ++= s"location = ${l.location} \n"
     buf ++= s"size = ${l.size} \n"
+    buf ++= s"parent Visual Features = ${l.parent.visualFeatures} \n"
     l.elements.foreach { n =>
       buf ++= s"\t tag = ${n.tagName} \n"
       buf ++= s"\t text = || ${n.text.replace("\n", " ")} || \n"
@@ -47,16 +48,17 @@ object HyLiEnTest extends App {
       buf ++= s"\t urls = ${n.urls}\n"
       buf ++= s"\t urls absolutes = ${DomNode.getUrls(n.html, l.pageUrl)} \n"
       buf ++= s"\t node class attribute = ${n.cssClass} \n"
-      buf ++= s"\t node MapCssProps = ${n.cssProperties} \n"
+//      buf ++= s"\t node MapCssProps = ${n.cssProperties} \n"
       buf ++= s"\t BFS nodes Styles = ${n.bfsCssClasses} \n"
+      buf ++= s"\t Visual Feauters =  ${n.visualFeatures} \n"
       buf ++= "----------------------- \n"
     }
 
-    if (l.from.size > 1){
-      buf ++= "########################### \n"
-      l.from.foreach(p => buf ++= toString(p))
-      buf ++= "########################### \n"
-    }
+//    if (l.from.size > 1){
+//      buf ++= "########################### \n"
+//      l.from.foreach(p => buf ++= toString(p))
+//      buf ++= "########################### \n"
+//    }
 
     buf.toString()
   }
