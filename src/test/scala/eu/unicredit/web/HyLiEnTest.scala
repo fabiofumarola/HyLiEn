@@ -12,7 +12,7 @@ object HyLiEnTest extends App {
     headless = true, quickRender = true,
     logReqs = false, browserSize = BrowserSize(1920, 1080))
 
-  val lists = hylien.extract("http://www.cs.illinois.edu/directory/faculty")
+  val lists = hylien.extract("http://www.bsvillage.com/Piscine-Fuori-Terra/")
 
   //("http://www.cs.illinois.edu")
 
