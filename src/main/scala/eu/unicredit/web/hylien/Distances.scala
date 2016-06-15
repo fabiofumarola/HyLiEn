@@ -17,7 +17,7 @@ object Distances {
       }).last.toFloat
   }
 
-  def normalizedEditDistance[T](a: Seq[T], b: Seq[T]) = {
+  def normalizedEditDistance[T](a: Seq[T], b: Seq[T]): Float = {
     editDistance(a, b) / ((a.size + b.size) / 2)
   }
 

@@ -12,7 +12,7 @@ object HyLiEnTest extends App {
     headless = true, quickRender = true,
     logReqs = false, browserSize = BrowserSize(1920, 1080))
 
-  val lists = hylien.extract("http://www.bsvillage.com/Piscine-Fuori-Terra/")
+  val lists = hylien.extract("http://www.cs.illinois.edu/directory/faculty?quicktabs_faculty_tabs_new=1#quicktabs-faculty_tabs_new")
 
   //("http://www.cs.illinois.edu")
 
@@ -36,7 +36,7 @@ object HyLiEnTest extends App {
   def toString(l: WebList): String = {
     val buf = new StringBuilder
     buf ++= s"Printing ${l.orientation} of by ${l.elements.size} elements obtained merging ${l.from.size} lists \n"
-    buf ++= s"parent dom tag = ${l.parent.tagName} \n"
+    buf ++= s"parent dom tag = ${l.parent.tagName}\n"
     buf ++= s"location = ${l.location} \n"
     buf ++= s"size = ${l.size} \n"
     buf ++= s"parent Visual Features = ${l.parent.visualFeatures} \n"
@@ -50,7 +50,7 @@ object HyLiEnTest extends App {
       buf ++= s"\t node class attribute = ${n.cssClass} \n"
 //      buf ++= s"\t node MapCssProps = ${n.cssProperties} \n"
       buf ++= s"\t BFS nodes Styles = ${n.bfsCssClasses} \n"
-      buf ++= s"\t Visual Feauters =  ${n.visualFeatures} \n"
+      buf ++= s"\t Visual Features =  ${n.visualFeatures} \n"
       buf ++= "----------------------- \n"
     }
 
