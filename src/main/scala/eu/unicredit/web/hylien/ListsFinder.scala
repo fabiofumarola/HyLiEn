@@ -30,14 +30,14 @@ private[this] object VisualListFinder {
 
         val verticalList = verticalAligned.map {
           case (pos, list) =>
-            val (similar, nonSimilar) = structuralFilter(list, minsim)
+            val (similar, nonSimilar) = structuralCssFilter(list, minsim)
             notAligned = notAligned ++ nonSimilar
             pos -> WebList(pageUrl, domNode, Orientation.vertical, domNode.location, domNode.size, similar)
         }.filter(_._2.elements.size > 1).values
 
         val horizontalList = horizontalAligned.map {
           case (pos, list) =>
-            val (similar, nonSimilar) = structuralFilter(list, minsim)
+            val (similar, nonSimilar) = structuralCssFilter(list, minsim)
             notAligned = notAligned ++ nonSimilar
             pos -> WebList(pageUrl, domNode, Orientation.horizontal, domNode.location, domNode.size, similar)
         }.filter(_._2.elements.size > 1).values
@@ -94,6 +94,25 @@ private[this] object VisualListFinder {
           val dist = Distances.normalizedEditDistance(head.bfs, n.bfs)
           if (dist > minsim) nonSimilar = n :: nonSimilar
           dist <= minsim
+        }
+    }
+
+    if (similar.size > 2) (similar, nonSimilar)
+    else (Seq.empty, similar ++ nonSimilar)
+  }
+
+  private def structuralCssFilter(seq: Seq[DomNode], minsim: Float): (Seq[DomNode], Seq[DomNode]) = {
+    var nonSimilar = List.empty[DomNode]
+
+    val similar = Random.shuffle(seq) match {
+      //take the head and for the tail filter all the elements similar to the head
+      case head :: tail =>
+        head :: tail.filter { n =>
+          val structDist = Distances.normalizedEditDistance(head.bfs, n.bfs)
+          val cssDist = Distances.normalizedEditDistance(head.bfsCssClasses,n.bfsCssClasses)
+          val avg = (structDist + cssDist) / 2
+          if (avg > minsim) nonSimilar = n :: nonSimilar
+          avg <= minsim
         }
     }
 
