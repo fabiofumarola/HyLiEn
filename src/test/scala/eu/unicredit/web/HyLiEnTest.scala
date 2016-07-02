@@ -12,7 +12,10 @@ object HyLiEnTest extends App {
     headless = true, quickRender = true,
     logReqs = false, browserSize = BrowserSize(1920, 1080))
 
-  val lists = hylien.extract("http://www.cs.illinois.edu/directory/faculty?quicktabs_faculty_tabs_new=1#quicktabs-faculty_tabs_new")
+  val lists = hylien.extract("http://www.immobiliare.it/44602950-Vendita-Bilocale-via-Pola-2-Milano.html")
+
+
+  //("http://www.cs.illinois.edu/directory/faculty?quicktabs_faculty_tabs_new=1#quicktabs-faculty_tabs_new")
 
   //("http://www.cs.illinois.edu")
 
