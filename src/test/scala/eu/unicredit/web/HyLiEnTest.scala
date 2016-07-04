@@ -8,14 +8,9 @@ import eu.unicredit.web.hylien.VisualHyLiEn
  */
 object HyLiEnTest extends App {
 
-<<<<<<< HEAD
-  val hylien = new VisualHyLiEn()
-  val result = hylien.extract("http://www.cs.illinois.edu")
-=======
   val hylien = new VisualHyLiEn(
     headless = true, quickRender = true,
     logReqs = false, browserSize = BrowserSize(1920, 1080))
->>>>>>> upstream/master
 
   val lists = hylien.extract("http://www.immobiliare.it/44602950-Vendita-Bilocale-via-Pola-2-Milano.html")
 
@@ -43,32 +38,23 @@ object HyLiEnTest extends App {
 
   def toString(l: WebList): String = {
     val buf = new StringBuilder
-<<<<<<< HEAD
-    buf ++= s"Printing ${l.orientation} of by ${l.elements.size} elements \n"
-    buf ++= s"parent dom tag = ${l.parent.tagName} \n"
-    buf ++= s"location = ${l.location} \n"
-    buf ++= s"location = ${l.size} \n"
-=======
+
     buf ++= s"Printing ${l.orientation} of by ${l.elements.size} elements obtained merging ${l.from.size} lists \n"
     buf ++= s"parent dom tag = ${l.parent.tagName}\n"
     buf ++= s"location = ${l.location} \n"
     buf ++= s"size = ${l.size} \n"
     buf ++= s"parent Visual Features = ${l.parent.visualFeatures} \n"
->>>>>>> upstream/master
     l.elements.foreach { n =>
       buf ++= s"\t tag = ${n.tagName} \n"
       buf ++= s"\t text = || ${n.text.replace("\n", " ")} || \n"
       //buf ++= s"\t html = || ${n.html} || \n"
       buf ++= s"\t bfs = ${n.bfs}\n"
       buf ++= s"\t urls = ${n.urls}\n"
-<<<<<<< HEAD
-=======
       buf ++= s"\t urls absolutes = ${DomNode.getUrls(n.html, l.pageUrl)} \n"
       buf ++= s"\t node class attribute = ${n.cssClass} \n"
 //      buf ++= s"\t node MapCssProps = ${n.cssProperties} \n"
       buf ++= s"\t BFS nodes Styles = ${n.bfsCssClasses} \n"
       buf ++= s"\t Visual Features =  ${n.visualFeatures} \n"
->>>>>>> upstream/master
       buf ++= "----------------------- \n"
     }
 

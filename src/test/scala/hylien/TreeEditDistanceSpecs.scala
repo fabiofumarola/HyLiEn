@@ -1,6 +1,9 @@
 package hylien
 
 import eu.unicredit.web.Models.{DomNode, Location, Size}
+import eu.unicredit.web.hylien.Distances
+import org.specs2.mutable.Specification
+import org.specs2.specification.Scope
 
 import scala.collection.mutable
 
