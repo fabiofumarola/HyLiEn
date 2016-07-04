@@ -15,11 +15,12 @@ lazy val root = (project in file("."))
  .settings(commons: _*)
   .settings(
     libraryDependencies ++= Seq(
-      "com.machinepublishers" % "jbrowserdriver" % "0.14.2",
+      "com.machinepublishers" % "jbrowserdriver" % "0.14.7",
       "org.jsoup" % "jsoup" % "1.9.2",
       "com.typesafe.scala-logging" % "scala-logging_2.11" % "3.4.0",
       "ch.qos.logback" % "logback-classic" % "1.1.7",
-      "com.rockymadden.stringmetric" % "stringmetric-core_2.11" % "0.27.4"
-
-)
+      "com.rockymadden.stringmetric" % "stringmetric-core_2.11" % "0.27.4",
+      "io.github.lukehutch" % "fast-classpath-scanner" % "1.9.21"
+    )
+>>>>>>> upstream/master
   )
