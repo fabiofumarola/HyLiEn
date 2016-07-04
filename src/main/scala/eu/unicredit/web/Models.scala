@@ -3,15 +3,10 @@ package eu.unicredit.web
 import org.jsoup.Jsoup
 
 import scala.annotation.tailrec
-<<<<<<< HEAD
-import scala.collection.JavaConverters._
-import scala.collection.mutable
-import scala.util.{Failure, Success, Try}
-=======
 import scala.collection.JavaConversions._
 import scala.collection.mutable
 import scala.util.{ Failure, Success, Try }
->>>>>>> upstream/master
+
 
 /**
  * Created by fabiofumarola on 24/05/16.
@@ -147,15 +142,11 @@ object Models {
     orientation: Orientation,
     location: Location,
     size: Size,
-<<<<<<< HEAD
-    elements: Seq[DomNode]){
-    lazy val urls = elements.flatMap(n => n.urls)
-=======
     elements: Seq[DomNode],
     from: Seq[WebList] = Seq.empty) {
     lazy val urls = elements.flatMap(_.urls)
     lazy val bfs = elements.flatMap(_.bfs)
->>>>>>> upstream/master
+
   }
 
 }
