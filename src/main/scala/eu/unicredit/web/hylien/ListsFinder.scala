@@ -91,7 +91,8 @@ private[this] object VisualListFinder {
       //take the head and for the tail filter all the elements similar to the head
       case head :: tail =>
         head :: tail.filter { n =>
-          val dist = Distances.normalizedEditDistance(head.bfs, n.bfs)
+          //val dist = Distances.normalizedEditDistance(head.bfs, n.bfs)
+          val dist = Distances.normalizedTreeEditDistance(head, n)
           if (dist > minsim) nonSimilar = n :: nonSimilar
           dist <= minsim
         }

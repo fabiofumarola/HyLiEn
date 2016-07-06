@@ -72,19 +72,18 @@ object Distances {
   }
 
   def normalizedTreeEditDistance (a: DomNode, b:DomNode) : Double = {
-    def getSize0(nodes: List[DomNode], acc:Int): Int = {
-      nodes match {
-        case List() => acc
-        case h::tail => getSize0(h.children.toList ++ tail, acc+1)
-      }
+    def getSize0(nodes: List[DomNode], acc:Int): Int = nodes match {
+      case List() => acc
+      case h::tail => getSize0(h.children.toList ++ tail, acc+1)
     }
+
     def getSize(tree: DomNode): Int = {
       getSize0(List(tree), 0)
     }
 
     val ted = treeEditDistance(a,b)
     val avgNodes = (getSize(a) + getSize(b)).toDouble /2
-    ted.toDouble / avgNodes
+    1- (ted.toDouble / avgNodes)
   }
 
 }
