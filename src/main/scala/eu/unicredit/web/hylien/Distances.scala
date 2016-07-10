@@ -1,6 +1,7 @@
 package eu.unicredit.web.hylien
 
 import com.rockymadden.stringmetric.similarity._
+import eu.unicredit.web.Models.DomNode
 
 import scala.collection.mutable
 import scala.util.Try
@@ -31,6 +32,58 @@ object Distances {
     DiceSorensenMetric(1).compare(
       Encoder.encode(a).toArray,
       Encoder.encode(b).toArray)
+  }
+
+  /**
+    * Implement the simple tree matching algorithm
+    *
+    * @param a
+    * @param b
+    * @return
+    */
+  def treeEditDistance (a: DomNode, b:DomNode): Double = {
+
+    a.tagName.equals(b.tagName) match {
+      case false => 0D
+      case true =>
+        val num_rows = a.children.size + 1
+        val num_columns =  b.children.size + 1
+        val matchMatrix = Array.ofDim[Double](num_rows, num_columns)
+
+        //Initialize 0th row and 0th column
+        matchMatrix.indices.foreach(row => matchMatrix(row)(0) = 0D)
+        matchMatrix(0).indices.foreach(column => matchMatrix(0)(column) = 0D)
+
+        val pairs = for{
+          row <- 1 until num_rows
+          column <- 1 until num_columns
+        } yield (row, column)
+
+        pairs.foreach {
+          case (row, column) =>
+            val left_distance = matchMatrix(row)(column - 1)
+            val up_distance = matchMatrix(row - 1)(column)
+            val diagonal_distance = matchMatrix(row - 1)(column - 1) + treeEditDistance(a.children(row - 1), b.children(column - 1))
+            val bestDistance = List(left_distance, up_distance, diagonal_distance).max
+            matchMatrix(row)(column) = bestDistance
+        }
+        1D + matchMatrix(matchMatrix.length - 1)(matchMatrix(0).length - 1)
+    }
+  }
+
+  def normalizedTreeEditDistance (a: DomNode, b:DomNode) : Double = {
+    def getSize0(nodes: List[DomNode], acc:Int): Int = nodes match {
+      case List() => acc
+      case h::tail => getSize0(h.children.toList ++ tail, acc+1)
+    }
+
+    def getSize(tree: DomNode): Int = {
+      getSize0(List(tree), 0)
+    }
+
+    val ted = treeEditDistance(a,b)
+    val avgNodes = (getSize(a) + getSize(b)).toDouble /2
+    1- (ted.toDouble / avgNodes)
   }
 
 }

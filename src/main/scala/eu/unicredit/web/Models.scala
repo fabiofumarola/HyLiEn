@@ -5,7 +5,8 @@ import org.jsoup.Jsoup
 import scala.annotation.tailrec
 import scala.collection.JavaConversions._
 import scala.collection.mutable
-import scala.util.{ Failure, Success, Try }
+import scala.util.Try
+
 
 /**
  * Created by fabiofumarola on 24/05/16.
@@ -125,6 +126,7 @@ object Models {
     from: Seq[WebList] = Seq.empty) {
     lazy val urls = elements.flatMap(_.urls)
     lazy val bfs = elements.flatMap(_.bfs)
+
   }
 
 }

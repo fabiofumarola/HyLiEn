@@ -20,9 +20,11 @@ class VisualHyLiEn(headless: Boolean = true, quickRender: Boolean = true,
     logReqs = logReqs,
     browserSize = browserSize)
 
-  def extract(url: String, tagSimFactor: Float = 0.4F, maxRecordTags: Int = 30): Seq[WebList] = {
+  def extract(url: String, tagSimFactor: Float = 0.4F, maxRecordTags: Int = 60): Seq[WebList] = {
+    val startTime = System.currentTimeMillis()
     val root = webExtractor.parse(url)
-    logger.debug(s"parsed $url, start extracting lists")
+    val totalTime = System.currentTimeMillis() - startTime
+    logger.info(s"parsed $url in $totalTime millisec, start extracting lists")
 
     @tailrec
     def extract0(notAligned: List[DomNode], acc: List[WebList]): List[WebList] =
