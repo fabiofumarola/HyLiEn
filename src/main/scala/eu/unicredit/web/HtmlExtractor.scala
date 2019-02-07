@@ -71,9 +71,11 @@ class VisualTagTreeBuilder(headless: Boolean = true, quickRender: Boolean = true
       .split(";")
       .filter(_.contains("::"))
       .map(_.split("::"))
-      .map {
+      .flatMap {
         case Array(prop, value) =>
-          prop -> value
+          Some(prop -> value)
+        case Array(prop) =>
+          Some(prop -> "")
       }
       .toMap
       .filterNot(_._1.startsWith("-webkit"))
