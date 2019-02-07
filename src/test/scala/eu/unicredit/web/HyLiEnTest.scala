@@ -14,20 +14,6 @@ object HyLiEnTest extends App {
 
   val lists = hylien.extract("http://www.idealista.it/vendita-case/milano-milano/")
 
-
-  //("http://www.cs.illinois.edu/directory/faculty?quicktabs_faculty_tabs_new=1#quicktabs-faculty_tabs_new")
-
-  //("http://www.cs.illinois.edu")
-
-  //("https://it.wikipedia.org/wiki/Fiat_Chrysler_Automobiles")
- //("http://www.bsvillage.com/Piscine-Fuori-Terra/")
-
-  //("http://www.cs.illinois.edu/directory/faculty")
-
-  //("http://www.cs.ox.ac.uk/")
-
-  // //("http://www.harvard.edu/") //("http://cs.stanford.edu/")
-
   println(s"Got ${lists.size} lists")
   lists.foreach { l =>
     val r = toString(l)
